@@ -25,7 +25,7 @@ module.exports = function (app) {
       if(locale == "american-to-british" ){
         const result = translator.ame2brits( text );
 
-        //res.json({ text, translation: result })
+        res.json({ text, translation: result })
 
         //console.warn(result)
 
