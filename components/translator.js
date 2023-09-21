@@ -11,24 +11,25 @@ class Translator {
         for (let x in americanOnly) {
             const value = makeTranslation( fullText, x, americanOnly[x])
             if(value){
-                //console.log( value )
-                return value
+                
+                fullText = value
             }
         }
         for (let x in americanToBritishSpelling) {
             const value = makeTranslation( fullText, x, americanToBritishSpelling[x])
             if(value){
-                //console.log( value )
-                return value
+                fullText = value
             }
         }
         for (let x in americanToBritishTitles) {
             const value = makeTranslation( fullText, x, americanToBritishTitles[x])
             if(value){
-                //console.log( value )
-                return value
+                fullText = value
             }
         }
+
+        //console.log('<<<<<<< '+ fullText)
+        return fullText
     };
 }
 
@@ -37,56 +38,94 @@ class Translator {
 function makeTranslation(text, keyword, value){
     
     // Step 2: Build regex pattern as a string
-    const regexPattern = new RegExp(`[^a-zA-Z]${keyword}[^a-zA-Z]`, 'i');
-    //let search1 = -1
-    
+    const regexPattern = new RegExp(`[^a-zA-Z]${keyword}[^a-zA-Z]`, 'i');    
     if( text.search(regexPattern) != -1) {
-        //search1 = text.search(regexPattern)
-        return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${value}</span>`)
+        
+        return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern, value) }</span>`)   
+        
     }
 
-    const regexPattern2 = new RegExp(`${keyword}[^a-zA-Z]`, 'i');
-    //let search2 = -1
+    const regexPattern2 = new RegExp(`${keyword}[^a-zA-Z]`, 'i');    
     if( text.search(regexPattern2) != -1){
-        //search2 = text.search(regexPattern2);
-        return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${value}</span>`)
+        
+        return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern2, value) }</span>`)   
     }
 
-    const regexPattern3 = new RegExp(`[^a-zA-Z]${keyword}`, 'i');
-    //let search3 = -1
+
+    const regexPattern3 = new RegExp(`[^a-zA-Z]${keyword}`, 'i');    
     if( text.search(regexPattern3) != -1){
         const sliceBefore = text.slice(0, text.search(regexPattern3) )
         const match = text.match( regexPattern3) 
         // console.log('len '+ sliceBefore.length)
         // console.log('len '+ match[0])
         if( (sliceBefore.length +  match[0].length) == text.length ){
-            return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${value}</span>`)
+
+            return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern3, value) }</span>`) 
+
         }
     }
 
 
-    const regexPattern4 = new RegExp(`${keyword}`, 'i');
-    //let search4 = -1
+    const regexPattern4 = new RegExp(`${keyword}`, 'i');    
     if( text.search(regexPattern4) != -1){
         const sliceBefore = text.slice(0, text.search(regexPattern4) )
         const match = text.match( regexPattern4)
         
         if( (sliceBefore.length +  match[0].length) == text.length ){
-            //search4 = text.search(regexPattern4);
-            return text.replace(regexPattern4, `<span class="highlight">${value}</span>`)
+            
+            return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern4, value) }</span>`) 
+        }
+    }
+    
+}
+
+
+
+
+
+
+function checkCapitalLetter(text, regexPattern, returnWord){
+    const portion2Replace = text.match(regexPattern)[0]
+
+    const inputArray = portion2Replace.split(" ")
+    const outputArray = returnWord.split(" ")
+    
+    console.log( inputArray )
+    console.log( outputArray )
+
+    
+    let y = 0
+    for(let i = 0; i < inputArray.length; i++){
+        if( inputArray[i] !== '' && inputArray[i] !== ' ' && inputArray[i] !== undefined){
+            const firstCharacter = inputArray[i].slice(0,1)
+            if( /[A-Z]/.test(firstCharacter) == true){ 
+                let firstCharacterOutput = outputArray[y].slice(0,1)
+                
+                firstCharacterOutput = firstCharacterOutput.toUpperCase()                
+
+                let appendCapitalLetter = firstCharacterOutput + outputArray[y].slice(1)
+                outputArray[y] = appendCapitalLetter 
+
+                y++
+            } 
+            
+        }
+    }
+    
+
+    let patchUpOutpur = ''
+    for(let i=0; i < outputArray.length; i++){
+        patchUpOutpur += outputArray[i]
+
+        if(i+1 != outputArray.length){
+            patchUpOutpur += ' '
         }
     }
 
-
-    /*
-    if(search1 != -1 || search2 != -1 || search3 != -1 || search4 != -1){
-    console.log('1 '+ search1 ); // Output: [ 'apple' ]
-    console.log('2 '+ search2 );
-    console.log('3 '+ search3 );
-    console.log('4 '+ search4 );
-    console.log('str '+ str );
-    }
-    */
+    return patchUpOutpur
 }
+
+
+
 
 module.exports = Translator;
