@@ -68,16 +68,17 @@ function makeTranslation(text, keyword, value){
     const regexPattern = new RegExp(`[^a-zA-Z]${keyword}[^a-zA-Z]`, 'i');    
     if( text.search(regexPattern) != -1) {
         
-        console.log (checkAlreadyReplacedWord(text, text.search(regexPattern))  )
-
-        return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern, value) }</span>`)   
-        
+        if( checkAlreadyReplacedWord(text, text.search(regexPattern)) == false){
+            return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern, value) }</span>`)   
+        }        
     }
 
     const regexPattern2 = new RegExp(`${keyword}[^a-zA-Z]`, 'i');    
     if( text.search(regexPattern2) != -1){
         
-        // return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern2, value) }</span>`)   
+        if( checkAlreadyReplacedWord(text, text.search(regexPattern2)) == false){
+            return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern2, value) }</span>`) 
+        }  
     }
 
 
@@ -89,7 +90,9 @@ function makeTranslation(text, keyword, value){
         // console.log('len '+ match[0])
         if( (sliceBefore.length +  match[0].length) == text.length ){
             
-            // return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern3, value) }</span>`) 
+            if( checkAlreadyReplacedWord(text, text.search(regexPattern3)) == false){
+                return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern3, value) }</span>`)  
+            }  
 
         }
     }
@@ -102,7 +105,9 @@ function makeTranslation(text, keyword, value){
         
         if( (sliceBefore.length +  match[0].length) == text.length ){
             
-            // return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern4, value) }</span>`) 
+            if( checkAlreadyReplacedWord(text, text.search(regexPattern4)) == false){
+                return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern4, value) }</span>`)
+            }   
         }
     }
     

@@ -25,14 +25,20 @@ module.exports = function (app) {
       if(locale == "american-to-british" ){
         const result = translator.ame2brits( text );
 
-        res.json({ text, translation: result })
-
-        //console.warn(result)
+        if(text !== result){
+          res.json({ text, translation: result })
+        } else {
+          res.json({ text, translation: "Everything looks good to me!" })
+        }
 
       } else if( locale == "british-to-american" ){
         const result = translator.brits2ame( text );
 
-        res.json({ text, translation: result })
+        if(text !== result){
+          res.json({ text, translation: result })
+        } else {
+          res.json({ text, translation: "Everything looks good to me!" })
+        }
 
       }
 
