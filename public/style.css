@@ -79,3 +79,17 @@ input[type="button"] {
     margin-top: 0;
   }
 }
+
+
+
+
+
+#openLinksButton {
+    color: #2574A9;
+    background: none;
+    border: none;
+    text-decoration: underline;
+    font-size: 1em;
+    cursor: pointer;
+    text-align: center;
+}
