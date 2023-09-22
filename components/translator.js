@@ -68,7 +68,7 @@ function makeTranslation(text, keyword, value){
     const regexPattern = new RegExp(`[^a-zA-Z]${keyword}[^a-zA-Z]`, 'i');    
     if( text.search(regexPattern) != -1) {
         
-        checkAlreadyReplacedWord(text, text.search(regexPattern))
+        console.log (checkAlreadyReplacedWord(text, text.search(regexPattern))  )
 
         return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern, value) }</span>`)   
         
@@ -77,7 +77,7 @@ function makeTranslation(text, keyword, value){
     const regexPattern2 = new RegExp(`${keyword}[^a-zA-Z]`, 'i');    
     if( text.search(regexPattern2) != -1){
         
-        return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern2, value) }</span>`)   
+        // return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern2, value) }</span>`)   
     }
 
 
@@ -89,7 +89,7 @@ function makeTranslation(text, keyword, value){
         // console.log('len '+ match[0])
         if( (sliceBefore.length +  match[0].length) == text.length ){
             
-            return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern3, value) }</span>`) 
+            // return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern3, value) }</span>`) 
 
         }
     }
@@ -102,7 +102,7 @@ function makeTranslation(text, keyword, value){
         
         if( (sliceBefore.length +  match[0].length) == text.length ){
             
-            return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern4, value) }</span>`) 
+            // return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern4, value) }</span>`) 
         }
     }
     
@@ -113,15 +113,43 @@ function makeTranslation(text, keyword, value){
 
 function checkAlreadyReplacedWord(fullText, matchedWordPosition){
     let withinReplacedWordPosition = false
-    const checkAllReplacedWordPosition = []
-    let searchStartingPosition = 0
 
-    for(let i = 0; i < fullText.match( /<span class="highlight">/g).length; i++ ){
-        checkAllReplacedWordPosition.push( fullText.indexOf('<span class="highlight">', searchStartingPosition) )
+    const checkAllReplacedWordPosition = [];
+    let searchStartingPosition = 0;
+
+    while (fullText.indexOf('<span class="highlight">', searchStartingPosition) !== -1) {
+        searchStartingPosition = fullText.indexOf('<span class="highlight">', searchStartingPosition);
+
+                    
+            searchStartingPosition += '<span class="highlight">'.length; // Move to the next character after the found substring
+
+            const endingPositon = fullText.indexOf('</span>', searchStartingPosition)
+
+            searchStartingPosition += '</span>'.length; // Move to the next character after the found substring
+
+            checkAllReplacedWordPosition.push( [searchStartingPosition, endingPositon] );
+
+
+            console.log('stat '+searchStartingPosition)
+
+        
     }
 
-    console.log('arr ' + checkAllReplacedWordPosition)
+    console.log('arr ' + checkAllReplacedWordPosition);
+    console.log('searchStartingPosition ' + searchStartingPosition);
     console.log('matched word position ' + matchedWordPosition)
+
+    if(checkAllReplacedWordPosition.length > 0){
+        for(let i=0; i < checkAllReplacedWordPosition.length; i++){
+            if( checkAllReplacedWordPosition[i][0] <= matchedWordPosition && checkAllReplacedWordPosition[i][1] >= matchedWordPosition ){
+                withinReplacedWordPosition = true
+            }
+        }
+
+        return withinReplacedWordPosition
+    } else {
+        return withinReplacedWordPosition
+    }
 }
 
 
