@@ -27,8 +27,15 @@ class Translator {
                 fullText = value
             }
         }
+        
+        // adjust date method
+        if( fullText.search(/\d?\d:\d\d/) != -1) { 
+            let mainDate = fullText.match(/\d?\d:\d\d/).toString()
+            const covertedDate = mainDate.replace(':', '.')
 
-        //console.log('<<<<<<< '+ fullText)
+            fullText = fullText.replace(mainDate, `<span class="highlight">${covertedDate}</span>`)
+        }
+        
         return fullText
     };
 
@@ -53,6 +60,15 @@ class Translator {
             if(value){
                 fullText = value                
             }
+        }
+
+
+        // adjust date method
+        if( fullText.search(/\d?\d\.\d\d/) != -1) { 
+            let mainDate = fullText.match(/\d?\d\.\d\d/).toString()
+            const covertedDate = mainDate.replace('.', ':')
+
+            fullText = fullText.replace(mainDate, `<span class="highlight">${covertedDate}</span>`)
         }
 
         
@@ -133,16 +149,10 @@ function checkAlreadyReplacedWord(fullText, matchedWordPosition){
             searchStartingPosition += '</span>'.length; // Move to the next character after the found substring
 
             checkAllReplacedWordPosition.push( [searchStartingPosition, endingPositon] );
-
-
-            console.log('stat '+searchStartingPosition)
-
         
     }
 
-    console.log('arr ' + checkAllReplacedWordPosition);
-    console.log('searchStartingPosition ' + searchStartingPosition);
-    console.log('matched word position ' + matchedWordPosition)
+    
 
     if(checkAllReplacedWordPosition.length > 0){
         for(let i=0; i < checkAllReplacedWordPosition.length; i++){
