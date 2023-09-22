@@ -31,6 +31,33 @@ class Translator {
         //console.log('<<<<<<< '+ fullText)
         return fullText
     };
+
+    brits2ame(input) {
+        let fullText = input
+        
+        for (let x in britishOnly) {
+            const value = makeTranslation( fullText, x, britishOnly[x])
+            if(value){
+                
+                fullText = value
+            }
+        }
+        for (let x in americanToBritishSpelling) {
+            const value = makeTranslation( fullText, americanToBritishSpelling[x], x)
+            if(value){
+                fullText = value
+            }
+        }
+        for (let x in americanToBritishTitles) {
+            const value = makeTranslation( fullText, americanToBritishTitles[x], x)
+            if(value){
+                fullText = value                
+            }
+        }
+
+        
+        return fullText
+    };
 }
 
 
@@ -41,6 +68,8 @@ function makeTranslation(text, keyword, value){
     const regexPattern = new RegExp(`[^a-zA-Z]${keyword}[^a-zA-Z]`, 'i');    
     if( text.search(regexPattern) != -1) {
         
+        checkAlreadyReplacedWord(text, text.search(regexPattern))
+
         return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern, value) }</span>`)   
         
     }
@@ -59,7 +88,7 @@ function makeTranslation(text, keyword, value){
         // console.log('len '+ sliceBefore.length)
         // console.log('len '+ match[0])
         if( (sliceBefore.length +  match[0].length) == text.length ){
-
+            
             return text.replace(new RegExp(`${keyword}`, 'i'), `<span class="highlight">${ checkCapitalLetter( text, regexPattern3, value) }</span>`) 
 
         }
@@ -77,6 +106,22 @@ function makeTranslation(text, keyword, value){
         }
     }
     
+}
+
+
+
+
+function checkAlreadyReplacedWord(fullText, matchedWordPosition){
+    let withinReplacedWordPosition = false
+    const checkAllReplacedWordPosition = []
+    let searchStartingPosition = 0
+
+    for(let i = 0; i < fullText.match( /<span class="highlight">/g).length; i++ ){
+        checkAllReplacedWordPosition.push( fullText.indexOf('<span class="highlight">', searchStartingPosition) )
+    }
+
+    console.log('arr ' + checkAllReplacedWordPosition)
+    console.log('matched word position ' + matchedWordPosition)
 }
 
 

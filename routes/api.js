@@ -30,6 +30,9 @@ module.exports = function (app) {
         //console.warn(result)
 
       } else if( locale == "british-to-american" ){
+        const result = translator.brits2ame( text );
+
+        res.json({ text, translation: result })
 
       }
 
