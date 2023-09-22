@@ -178,8 +178,6 @@ function checkCapitalLetter(text, regexPattern, returnWord){
     const inputArray = portion2Replace.split(" ")
     const outputArray = returnWord.split(" ")
     
-    console.log( inputArray )
-    console.log( outputArray )
 
     
     let y = 0
